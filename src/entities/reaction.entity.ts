@@ -3,6 +3,7 @@ import { ReactionMediaEntity } from './reaction-media.entity';
 
 export const ReactionTagType = {
   OtakuApi: 0,
+  Internal: 1,
 } as const;
 
 @Entity('reaction_tags')

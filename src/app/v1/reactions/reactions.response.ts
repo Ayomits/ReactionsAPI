@@ -25,6 +25,8 @@ class SingleReactionTagMedia {
   url: string;
   @ApiProperty()
   format: string;
+  @ApiProperty()
+  source: number;
 }
 
 class SingleReactionTag {

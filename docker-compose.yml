@@ -14,10 +14,31 @@ services:
     ports:
       - "5432:5432"
 
+  reactions-minio:
+    image: minio/minio
+    container_name: reactions-minio
+    environment:
+      MINIO_ROOT_USER: root
+      MINIO_ROOT_PASSWORD: "12345678"
+      MINIO_DEFAULT_BUCKETS: reactions
+    volumes:
+      - minio_data:/data
+    ports:
+      - "9000:9000" 
+      - "9001:9001" 
+    command: server /data --console-address ":9001"
+
 volumes:
   postgres_data:
     driver: local
     driver_opts:
       type: none
       device: ./var/storage/postgres_data
+      o: bind
+
+  minio_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ./var/storage/minio_data
       o: bind

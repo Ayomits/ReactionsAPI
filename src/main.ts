@@ -10,8 +10,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const config = new DocumentBuilder()
-    .setTitle('Cats example')
-    .setDescription('The cats API description')
+    .setTitle('Reactions Api')
+    .setDescription('The reactions api')
     .setVersion('1.0')
     .build();
 
@@ -28,4 +28,4 @@ async function bootstrap() {
 
   await app.listen(AppConfig.port);
 }
-bootstrap();
+void bootstrap();
