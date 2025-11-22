@@ -118,6 +118,7 @@ export class ReactionsService {
           id: true,
           url: true,
           tag: false,
+          type: true,
         },
         name: true,
         id: true,
@@ -140,7 +141,11 @@ export class ReactionsService {
     return new JsonApiResponse({
       data: {
         ...reaction,
-        media: reaction.media.map((m) => ({ ...m, format: m.url.slice(-3) })),
+        media: reaction.media.map((m) => ({
+          ...m,
+          source: m.type,
+          format: m.url.slice(-3),
+        })),
       },
     }).toJSON();
   }
