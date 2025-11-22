@@ -1,0 +1,23 @@
+name: "reactions"
+services:
+  reactions-postgres:
+    container_name: reactions-postgres
+    image: postgres:17.5-alpine
+    restart: always
+    environment:
+      PGDATA: /pgdata
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+    volumes:
+      - postgres_data:/pgdata
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ./var/storage/postgres_data
+      o: bind

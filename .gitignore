@@ -1,3 +1,7 @@
 vendor
 .idea
 .vscode
+var
+node_modules
+dist
+.env

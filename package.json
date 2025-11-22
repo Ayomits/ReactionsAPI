@@ -1,0 +1,35 @@
+{
+  "name": "reactions-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc --build && tsc-alias",
+    "migration:create": "pnpm run build && npx typeorm migration:create",
+    "migration:generate": "pnpm run build && npx typeorm migration:generate -d dist/db/data-source.js",
+    "migration:run": "pnpm run build && npx typeorm migration:run -d dist/db/data-source.js",
+    "migration:revert": "pnpm run build && npx typeorm migration:revert -d dist/db/data-source.js",
+    "start": "node dist/main.js",
+    "dev": "nodemon"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.17.0",
+  "dependencies": {
+    "@fastify/swagger": "^9.6.1",
+    "@fastify/swagger-ui": "^5.2.3",
+    "@subnoto/fastify-logger": "^2.0.4",
+    "fastify": "^5.6.2",
+    "pg": "^8.16.3",
+    "typeorm": "^0.3.27",
+    "undici": "^7.16.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "nodemon": "^3.1.11",
+    "tsc-alias": "^1.8.16",
+    "typescript": "^5.9.3"
+  }
+}
