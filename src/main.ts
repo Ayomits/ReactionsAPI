@@ -2,6 +2,8 @@ import fastify from "fastify";
 import { AppConfig } from "./config";
 import { createDbConnection } from "./db/data-source";
 import { registerControllers } from "./controllers";
+import { registerTagsJob } from "./schedule/tags";
+import { registerMediaJob } from "./schedule/media";
 
 async function start() {
   AppConfig.init();
@@ -34,6 +36,8 @@ async function start() {
 
   await createDbConnection(app.log);
   registerControllers(app);
+  registerTagsJob();
+  registerMediaJob()
 
   app.listen({
     port: AppConfig.port,
