@@ -2,9 +2,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { TagMediaEntity } from './reaction-media.entity';
+import { TagEntity } from './reaction.entity';
 
 @Entity('medias')
 export class MediaEntity {
@@ -19,4 +22,7 @@ export class MediaEntity {
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @OneToOne(() => TagMediaEntity, (r) => r.id)
+  tag: TagEntity;
 }

@@ -7,6 +7,10 @@ export class AppConfig {
     return 4000;
   }
 
+  static get appEnv() {
+    return this.loadVar('APP_ENV') as 'dev' | 'prod';
+  }
+
   static get host() {
     return '0.0.0.0';
   }
@@ -19,8 +23,8 @@ export class AppConfig {
     return this.loadVar('RABBITMQ_URI');
   }
 
-  static get minioUrl() {
-    return this.loadVar('MINIO_URL');
+  static get minioHost() {
+    return this.loadVar('MINIO_HOST');
   }
 
   static get minioSecretKey() {

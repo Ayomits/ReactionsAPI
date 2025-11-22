@@ -8,7 +8,7 @@ export class MinioService {
 
   constructor() {
     this.client = new Client({
-      endPoint: AppConfig.minioUrl,
+      endPoint: AppConfig.minioHost,
       accessKey: AppConfig.minioAccessKey,
       secretKey: AppConfig.minioSecretKey,
       useSSL: false,
@@ -23,5 +23,11 @@ export class MinioService {
     }
 
     await this.client.makeBucket(name, undefined);
+  }
+
+  buildMinioUrl(bucket: string, path: string) {
+    const protocol = AppConfig.appEnv === 'dev' ? 'http' : 'https';
+    const port = AppConfig.appEnv === 'dev' ? ':9000' : '';
+    return `${protocol}://${AppConfig.minioHost}${port}/${bucket}/${path}`;
   }
 }

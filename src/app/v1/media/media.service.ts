@@ -13,7 +13,7 @@ export class MediaService implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
-    await this.minioService.createBucketIfNotExists('reactions');
+    await this.minioService.createBucketIfNotExists('tags');
   }
 
   async upload(options: {
@@ -22,23 +22,25 @@ export class MediaService implements OnModuleInit {
     files: Array<Express.Multer.File>;
   }) {
     const saves = options.files.map(() => ({ is_uploaded: false }));
-    const ids = (await this.mediaRepository.save(saves)).map((i) => i.id);
+    const medias = await this.mediaRepository.save(saves);
+    const ids = medias.map((m) => m.id);
 
     const resolvedIds: string[] = [];
-    for (let i = 0; i < ids.length; i++) {
-      const objectName = `${options.folderName ?? ''}/${ids[i]}.gif`;
+    for (let i = 0; i < medias.length; i++) {
+      const id = ids[i];
+      const objectName = `${options.folderName ?? ''}/${id}.gif`;
       try {
         await this.minioService.client.putObject(
           options.bucketName,
           objectName,
-          options.files[i].buffer, 
-          options.files[i].size, 
+          options.files[i].buffer,
+          options.files[i].size,
           {
             'Content-Type': options.files[i].mimetype,
             'Original-Name': options.files[i].originalname,
           },
         );
-        resolvedIds.push(ids[i]);
+        resolvedIds.push(id);
       } catch {
         continue;
       }
@@ -53,6 +55,6 @@ export class MediaService implements OnModuleInit {
       await this.mediaRepository.delete({ id: Not(In(resolvedIds)) });
     }
 
-    return resolvedIds;
+    return medias.filter((m) => resolvedIds.includes(m.id));
   }
 }

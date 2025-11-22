@@ -1,19 +1,19 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { ReactionMediaEntity } from './reaction-media.entity';
+import { TagMediaEntity } from './reaction-media.entity';
 
-export const ReactionTagType = {
+export const TagType = {
   OtakuApi: 0,
   Internal: 1,
 } as const;
 
-@Entity('reaction_tags')
-export class ReactionTagEntity {
+@Entity('tags')
+export class TagEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
   @Column()
   name!: string;
 
-  @OneToMany(() => ReactionMediaEntity, (m) => m.tag)
-  media!: ReactionMediaEntity[];
+  @OneToMany(() => TagMediaEntity, (m) => m.tag)
+  media!: TagMediaEntity[];
 }

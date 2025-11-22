@@ -1,24 +1,30 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ReactionTagEntity } from 'src/entities/reaction.entity';
 import { JsonApiResponse } from 'src/response/json-api';
 import { Repository } from 'typeorm';
-import { CreateReactionTagDto, UpdateReactionDto } from './reactions.dto';
+import { CreateTagDto, UpdateTagDto } from './tags.dto';
 import { HttpMethod } from 'src/utils/method';
 import { MediaService } from '../media/media.service';
 import { BadRequestException } from 'src/exceptions/bad-request';
 import { NotFoundException } from 'src/exceptions/not-found';
+import { TagEntity } from 'src/entities/reaction.entity';
+import { TagMediaEntity } from 'src/entities/reaction-media.entity';
+import { MinioService } from 'src/minio/minio.service';
+import { MinioBuckets } from 'src/minio/minio.const';
 
 @Injectable()
-export class ReactionsService {
+export class TagService {
   constructor(
-    @InjectRepository(ReactionTagEntity)
-    private reactionRepository: Repository<ReactionTagEntity>,
+    @InjectRepository(TagEntity)
+    private tagRepository: Repository<TagEntity>,
+    @InjectRepository(TagMediaEntity)
+    private tagMediaRepository: Repository<TagMediaEntity>,
     private mediaService: MediaService,
+    private minioService: MinioService,
   ) {}
 
   async uploadMedia(name: string, files: Express.Multer.File[]) {
-    const existed = await this.reactionRepository.findBy({ name: name });
+    const existed = await this.tagRepository.findOneBy({ name: name });
 
     if (!existed) {
       throw new NotFoundException('Tag does not exists');
@@ -30,21 +36,38 @@ export class ReactionsService {
       throw new BadRequestException('None gifs provided');
     }
 
-    const ids = await this.mediaService.upload({
-      bucketName: 'reactions',
+    const medias = await this.mediaService.upload({
+      bucketName: 'tags',
       folderName: name,
       files: gifs,
     });
 
+    const uploaded = await this.tagMediaRepository.save(
+      medias.map((m) => ({
+        tag: existed,
+        url: this.minioService.buildMinioUrl(
+          MinioBuckets.tags,
+          `/${name}/${m.id}.gif`,
+        ),
+        media: m,
+      })),
+    );
+
     return new JsonApiResponse({
       data: {
-        message: 'OK',
+        medias: uploaded,
+      },
+      relationships: {
+        tag: {
+          links: [`/api/v1/tags/${name}`],
+          data: existed,
+        },
       },
     }).toJSON();
   }
 
-  async createReactionTag(dto: CreateReactionTagDto) {
-    const existed = await this.reactionRepository.exists({
+  async createTag(dto: CreateTagDto) {
+    const existed = await this.tagRepository.exists({
       where: { name: dto.name },
     });
 
@@ -52,29 +75,33 @@ export class ReactionsService {
       return new BadRequestException('Tag already exists');
     }
 
-    const reaction = await this.reactionRepository.save(dto);
+    const tag = await this.tagRepository.save(dto);
 
     return new JsonApiResponse({
-      data: reaction,
+      data: tag,
       actions: [
         {
           method: HttpMethod.Get,
-          path: `/api/v1/reactions/${reaction.name}`,
+          path: `/api/v1/tags/${tag.name}`,
         },
         {
           method: HttpMethod.Put,
-          path: `/api/v1/reactions/${reaction.name}`,
+          path: `/api/v1/tags/${tag.name}`,
+        },
+        {
+          method: HttpMethod.Post,
+          path: `/api/v1/tags/${tag.name}/upload`,
         },
       ],
     }).toJSON();
   }
 
-  async updateReactionTag(name: string, dto: UpdateReactionDto) {
+  async updateTag(name: string, dto: UpdateTagDto) {
     const [existed, newExisted] = await Promise.all([
-      this.reactionRepository.exists({
+      this.tagRepository.exists({
         where: { name: name },
       }),
-      this.reactionRepository.exists({ where: { name: dto.name } }),
+      this.tagRepository.exists({ where: { name: dto.name } }),
     ]);
 
     if (existed) {
@@ -85,38 +112,42 @@ export class ReactionsService {
       return new BadRequestException('New name already exists');
     }
 
-    const reaction = await this.reactionRepository.update({ name: name }, dto);
+    const Tag = await this.tagRepository.update({ name: name }, dto);
 
     return new JsonApiResponse({
-      data: reaction,
+      data: Tag,
       actions: [
         {
           method: HttpMethod.Get,
-          path: `/api/v1/reactions/${dto.name}`,
+          path: `/api/v1/tags/${dto.name}`,
         },
         {
           method: HttpMethod.Put,
-          path: `/api/v1/reactions/${dto.name}`,
+          path: `/api/v1/tags/${dto.name}`,
+        },
+        {
+          method: HttpMethod.Post,
+          path: `/api/v1/tags/${dto.name}/upload`,
         },
       ],
     }).toJSON();
   }
 
-  async findAllReactions() {
-    const tags = await this.reactionRepository.find();
+  async findAllTags() {
+    const tags = await this.tagRepository.find();
 
     return new JsonApiResponse({
       data: {
         tags: tags.map((t) => ({
           name: t.name,
-          url: `/api/v1/reactions/${t.name}`,
+          url: `/api/v1/tags/${t.name}`,
         })),
       },
     });
   }
 
   async findByName(name: string) {
-    const reaction = await this.reactionRepository.findOne({
+    const Tag = await this.tagRepository.findOne({
       where: {
         name,
       },
@@ -126,23 +157,22 @@ export class ReactionsService {
           id: true,
           url: true,
           tag: false,
-          type: true,
+          media: true,
         },
         name: true,
         id: true,
       },
     });
 
-    if (!reaction) {
-      throw new NotFoundException('Reaction not found');
+    if (!Tag) {
+      throw new NotFoundException('Tag not found');
     }
 
     return new JsonApiResponse({
       data: {
-        ...reaction,
-        media: reaction.media.map((m) => ({
+        ...Tag,
+        media: Tag.media.map((m) => ({
           ...m,
-          source: m.type,
           format: m.url.slice(-3),
         })),
       },

@@ -3,24 +3,27 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { ReactionTagEntity } from './reaction.entity';
+import { TagEntity } from './reaction.entity';
+import { MediaEntity } from './media.entity';
 
-@Entity('reaction_medias')
-export class ReactionMediaEntity {
+@Entity('tags_medias')
+export class TagMediaEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
   @Column()
   url!: string;
 
-  @Column({})
-  type: number;
-
-  @ManyToOne(() => ReactionTagEntity, (tag) => tag.media, {
+  @ManyToOne(() => TagEntity, (tag) => tag.media, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'tag_id' })
-  tag!: ReactionTagEntity;
+  tag!: TagEntity;
+
+  @OneToOne(() => MediaEntity, (e) => e.id, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'media_id' })
+  media: MediaEntity;
 }

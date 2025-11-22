@@ -1,11 +1,11 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 
-export class CreateReactionTagDto {
+export class CreateTagDto {
   @ApiProperty()
   name: string;
 }
 
-export class UpdateReactionDto extends PartialType(CreateReactionTagDto) {}
+export class UpdateTagDto extends PartialType(CreateTagDto) {}
 
 export class UploadMediaDto {
   @ApiProperty({ type: [String], format: 'binary' })
