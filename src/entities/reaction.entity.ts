@@ -1,13 +1,13 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { ReactionMediaEntity } from "./reaction-media.entity";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { ReactionMediaEntity } from './reaction-media.entity';
 
 export const ReactionTagType = {
   OtakuApi: 0,
 } as const;
 
-@Entity("reaction_tags")
+@Entity('reaction_tags')
 export class ReactionTagEntity {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryGeneratedColumn('uuid')
   id!: string;
 
   @Column()
@@ -16,6 +16,6 @@ export class ReactionTagEntity {
   @Column({ default: ReactionTagType.OtakuApi })
   type!: number;
 
-  @OneToMany(() => ReactionMediaEntity, (r) => r.url)
+  @OneToMany(() => ReactionMediaEntity, (m) => m.tag)
   media!: ReactionMediaEntity[];
 }

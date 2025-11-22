@@ -1,4 +1,4 @@
-const baseUrl = "https://api.otakugifs.xyz";
+const baseUrl = 'https://api.otakugifs.xyz';
 
 export class OtakuClient {
   static create() {
@@ -7,7 +7,7 @@ export class OtakuClient {
 
   async findSingleReaction(name: string) {
     const resp = await fetch(`${baseUrl}/gif?reaction=${name}`, {
-      method: "GET",
+      method: 'GET',
     });
 
     if (!resp.ok) {
@@ -19,7 +19,7 @@ export class OtakuClient {
 
   async findAllReactions() {
     const resp = await fetch(`${baseUrl}/gif/allreactions`, {
-      method: "GET",
+      method: 'GET',
     });
 
     if (!resp.ok) {
