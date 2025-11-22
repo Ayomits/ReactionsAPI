@@ -14,9 +14,6 @@ export class ReactionTagEntity {
   @Column()
   name!: string;
 
-  @Column({ default: ReactionTagType.OtakuApi })
-  type!: number;
-
   @OneToMany(() => ReactionMediaEntity, (m) => m.tag)
   media!: ReactionMediaEntity[];
 }

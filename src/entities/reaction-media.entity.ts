@@ -15,6 +15,9 @@ export class ReactionMediaEntity {
   @Column()
   url!: string;
 
+  @Column({})
+  type: number;
+
   @ManyToOne(() => ReactionTagEntity, (tag) => tag.media, {
     onDelete: 'CASCADE',
   })

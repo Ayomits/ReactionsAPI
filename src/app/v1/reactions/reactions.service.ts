@@ -102,7 +102,6 @@ export class ReactionsService {
         tags: tags.map((t) => ({
           name: t.name,
           url: `/api/v1/reactions/${t.name}`,
-          source: t.type,
         })),
       },
     });
