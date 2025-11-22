@@ -1,34 +1,40 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ReactionTagEntity } from 'src/entities/reaction.entity';
 import { JsonApiResponse } from 'src/response/json-api';
 import { Repository } from 'typeorm';
 import { CreateReactionTagDto, UpdateReactionDto } from './reactions.dto';
 import { HttpMethod } from 'src/utils/method';
+import { MediaService } from '../media/media.service';
+import { BadRequestException } from 'src/exceptions/bad-request';
+import { NotFoundException } from 'src/exceptions/not-found';
 
 @Injectable()
 export class ReactionsService {
   constructor(
     @InjectRepository(ReactionTagEntity)
     private reactionRepository: Repository<ReactionTagEntity>,
+    private mediaService: MediaService,
   ) {}
 
-  async uploadMedia(files: Express.Multer.File[]) {
+  async uploadMedia(name: string, files: Express.Multer.File[]) {
+    const existed = await this.reactionRepository.findBy({ name: name });
+
+    if (!existed) {
+      throw new NotFoundException('Tag does not exists');
+    }
+
     const gifs = files.filter((f) => f.mimetype === 'image/gif');
 
     if (gifs.length === 0) {
-      throw new BadRequestException(
-        new JsonApiResponse({
-          data: {
-            message: 'None gifs provided',
-          },
-        }).toJSON(),
-      );
+      throw new BadRequestException('None gifs provided');
     }
+
+    const ids = await this.mediaService.upload({
+      bucketName: 'reactions',
+      folderName: name,
+      files: gifs,
+    });
 
     return new JsonApiResponse({
       data: {
@@ -43,13 +49,7 @@ export class ReactionsService {
     });
 
     if (existed) {
-      return new BadRequestException(
-        new JsonApiResponse({
-          data: {
-            message: 'Tag already exists',
-          },
-        }).toJSON(),
-      );
+      return new BadRequestException('Tag already exists');
     }
 
     const reaction = await this.reactionRepository.save(dto);
@@ -78,23 +78,11 @@ export class ReactionsService {
     ]);
 
     if (existed) {
-      return new NotFoundException(
-        new JsonApiResponse({
-          data: {
-            message: 'Not found',
-          },
-        }).toJSON(),
-      );
+      return new NotFoundException();
     }
 
     if (newExisted) {
-      return new BadRequestException(
-        new JsonApiResponse({
-          data: {
-            message: 'New name already exists',
-          },
-        }).toJSON(),
-      );
+      return new BadRequestException('New name already exists');
     }
 
     const reaction = await this.reactionRepository.update({ name: name }, dto);
@@ -146,16 +134,7 @@ export class ReactionsService {
     });
 
     if (!reaction) {
-      throw new NotFoundException(
-        new JsonApiResponse({
-          data: {
-            message: 'Reaction not found',
-          },
-          attributes: {
-            name,
-          },
-        }).toJSON(),
-      );
+      throw new NotFoundException('Reaction not found');
     }
 
     return new JsonApiResponse({

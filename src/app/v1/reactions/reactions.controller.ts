@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Get,
@@ -18,7 +17,6 @@ import {
 } from './reactions.response';
 import { CreateReactionTagDto, UploadMediaDto } from './reactions.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { JsonApiResponse } from 'src/response/json-api';
 
 @Controller({
   path: '/reactions',
@@ -34,8 +32,11 @@ export class ReactionsController {
   )
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: UploadMediaDto })
-  uploadReactionMedia(@UploadedFiles() files: Express.Multer.File[]) {
-    return this.reactionService.uploadMedia(files);
+  uploadReactionMedia(
+    @Param('name') name: string,
+    @UploadedFiles() files: Express.Multer.File[],
+  ) {
+    return this.reactionService.uploadMedia(name, files);
   }
 
   @Post('/')

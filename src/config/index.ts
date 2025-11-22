@@ -19,6 +19,18 @@ export class AppConfig {
     return this.loadVar('RABBITMQ_URI');
   }
 
+  static get minioUrl() {
+    return this.loadVar('MINIO_URL');
+  }
+
+  static get minioSecretKey() {
+    return this.loadVar('MINIO_SECRET_KEY');
+  }
+
+  static get minioAccessKey() {
+    return this.loadVar('MINIO_ACCESS_KEY');
+  }
+
   private static loadVar(name: string) {
     const var_ = process.env[name];
 
