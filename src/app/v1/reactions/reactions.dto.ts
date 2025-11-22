@@ -6,3 +6,8 @@ export class CreateReactionTagDto {
 }
 
 export class UpdateReactionDto extends PartialType(CreateReactionTagDto) {}
+
+export class UploadMediaDto {
+  @ApiProperty({ type: [String], format: 'binary' })
+  media: Express.Multer.File[];
+}

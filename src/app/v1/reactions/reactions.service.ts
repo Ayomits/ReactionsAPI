@@ -17,6 +17,26 @@ export class ReactionsService {
     private reactionRepository: Repository<ReactionTagEntity>,
   ) {}
 
+  async uploadMedia(files: Express.Multer.File[]) {
+    const gifs = files.filter((f) => f.mimetype === 'image/gif');
+
+    if (gifs.length === 0) {
+      throw new BadRequestException(
+        new JsonApiResponse({
+          data: {
+            message: 'None gifs provided',
+          },
+        }).toJSON(),
+      );
+    }
+
+    return new JsonApiResponse({
+      data: {
+        message: 'OK',
+      },
+    }).toJSON();
+  }
+
   async createReactionTag(dto: CreateReactionTagDto) {
     const existed = await this.reactionRepository.exists({
       where: { name: dto.name },
