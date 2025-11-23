@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpStatus,
   Param,
@@ -21,7 +22,7 @@ import { AllTagTagsResponse, SingleTagResponse } from './tags.response';
   path: '/tags',
 })
 export class TagController {
-  constructor(private TagService: TagService) {}
+  constructor(private tagService: TagService) {}
 
   @Post('/:name/upload')
   @UseInterceptors(
@@ -35,30 +36,36 @@ export class TagController {
     @Param('name') name: string,
     @UploadedFiles() files: Express.Multer.File[],
   ) {
-    return this.TagService.uploadMedia(name, files);
+    return this.tagService.uploadMedia(name, files);
   }
 
   @Post('/')
   @ApiResponse({})
   handleCreation(@Body() dto: CreateTagDto) {
-    return this.TagService.createTag(dto);
+    return this.tagService.createTag(dto);
   }
 
   @Put('/:name')
   @ApiResponse({})
   handleUpdate(@Param('name') name: string, @Body() dto: UpdateTagDto) {
-    return this.TagService.updateTag(name, dto);
+    return this.tagService.updateTag(name, dto);
   }
 
   @Get('/')
   @ApiResponse({ status: HttpStatus.OK, type: AllTagTagsResponse })
   handleAllTags() {
-    return this.TagService.findAllTags();
+    return this.tagService.findAllTags();
   }
 
   @Get('/:name')
   @ApiResponse({ status: HttpStatus.OK, type: SingleTagResponse })
   async handleTagName(@Param('name') name: string) {
-    return this.TagService.findByName(name);
+    return this.tagService.findByName(name);
+  }
+
+  @Delete('/:name')
+  @ApiResponse({ status: HttpStatus.NO_CONTENT })
+  async handleTagDeletion(@Param('name') name: string) {
+    return this.tagService.deleteTag(name);
   }
 }

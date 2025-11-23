@@ -26,13 +26,16 @@ export class MediaService implements OnModuleInit {
     const ids = medias.map((m) => m.id);
 
     const resolvedIds: string[] = [];
+    function generatePath(id: string) {
+      return `${options.folderName ?? ''}/${id}.gif`;
+    }
     for (let i = 0; i < medias.length; i++) {
       const id = ids[i];
-      const objectName = `${options.folderName ?? ''}/${id}.gif`;
+
       try {
         await this.minioService.client.putObject(
           options.bucketName,
-          objectName,
+          generatePath(id),
           options.files[i].buffer,
           options.files[i].size,
           {
@@ -46,15 +49,42 @@ export class MediaService implements OnModuleInit {
       }
     }
 
-    await this.mediaRepository.update(
-      { id: In(resolvedIds) },
-      { is_uploaded: true },
-    );
+    for (const id of ids) {
+      await this.mediaRepository.update(
+        { id: id },
+        {
+          is_uploaded: true,
+          bucketName: options.bucketName,
+          path: generatePath(id),
+        },
+      );
+    }
 
     if (resolvedIds.length != options.files.length) {
       await this.mediaRepository.delete({ id: Not(In(resolvedIds)) });
     }
 
     return medias.filter((m) => resolvedIds.includes(m.id));
+  }
+
+  async delete(ids: string[]) {
+    const entries = await this.mediaRepository.find({
+      where: { id: In(ids) },
+      transaction: true,
+    });
+
+    for (const entry of entries) {
+      try {
+        await this.minioService.client.removeObject(
+          entry.bucketName,
+          entry.path,
+          { forceDelete: true },
+        );
+      } catch {
+        continue;
+      }
+    }
+
+    await this.mediaRepository.delete({ id: In(ids) });
   }
 }

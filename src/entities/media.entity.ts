@@ -17,6 +17,12 @@ export class MediaEntity {
   @Column()
   is_uploaded: boolean;
 
+  @Column()
+  path: string;
+
+  @Column()
+  bucketName: string;
+
   @CreateDateColumn()
   created_at: Date;
 

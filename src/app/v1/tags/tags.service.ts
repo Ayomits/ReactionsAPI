@@ -112,10 +112,10 @@ export class TagService {
       return new BadRequestException('New name already exists');
     }
 
-    const Tag = await this.tagRepository.update({ name: name }, dto);
+    const tag = await this.tagRepository.update({ name: name }, dto);
 
     return new JsonApiResponse({
-      data: Tag,
+      data: tag,
       actions: [
         {
           method: HttpMethod.Get,
@@ -137,12 +137,10 @@ export class TagService {
     const tags = await this.tagRepository.find();
 
     return new JsonApiResponse({
-      data: {
-        tags: tags.map((t) => ({
-          name: t.name,
-          url: `/api/v1/tags/${t.name}`,
-        })),
-      },
+      data: tags.map((t) => ({
+        name: t.name,
+        url: `/api/v1/tags/${t.name}`,
+      })),
     });
   }
 
@@ -177,5 +175,18 @@ export class TagService {
         })),
       },
     }).toJSON();
+  }
+
+  async deleteTag(name: string) {
+    const existed = await this.tagRepository.findOne({
+      where: { name },
+      relations: { media: { media: true } },
+    });
+
+    if (!existed) {
+      throw new NotFoundException('tag does not exists');
+    }
+
+    return new JsonApiResponse({ data: existed });
   }
 }
