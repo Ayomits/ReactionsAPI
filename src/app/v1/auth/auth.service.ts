@@ -4,14 +4,14 @@ import { UserService } from '../user/user.service';
 import { NotFoundException } from 'src/exceptions/not-found';
 import { BadRequestException } from 'src/exceptions/bad-request';
 import { JsonApiResponse } from 'src/response/json-api';
-import { JwtService } from '@nestjs/jwt';
-import { AppConfig } from 'src/config';
+import { TokensService } from '../tokens/tokens.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     @Inject(forwardRef(() => UserService)) private userService: UserService,
-    private jwtService: JwtService,
+    @Inject(forwardRef(() => TokensService))
+    private tokensService: TokensService,
   ) {}
 
   async login(dto: AuthDto) {
@@ -30,16 +30,11 @@ export class AuthService {
       throw new BadRequestException('Invalid password');
     }
 
+    const tokens = await this.tokensService.signPair(existed.id);
+
     return new JsonApiResponse({
       data: {
-        tokens: {
-          access: await this.jwtService.signAsync(existed, {
-            secret: AppConfig.jwtSecretAccess,
-          }),
-          refresh: await this.jwtService.signAsync(existed, {
-            secret: AppConfig.jwtSecretRefresh,
-          }),
-        },
+        tokens: tokens,
         user: existed,
       },
     });
@@ -54,16 +49,11 @@ export class AuthService {
 
     const user = await this.userService.createUser(dto);
 
+    const tokens = await this.tokensService.signPair(user.id);
+
     return new JsonApiResponse({
       data: {
-        tokens: {
-          access: await this.jwtService.signAsync(user, {
-            secret: AppConfig.jwtSecretAccess,
-          }),
-          refresh: await this.jwtService.signAsync(user, {
-            secret: AppConfig.jwtSecretRefresh,
-          }),
-        },
+        tokens: tokens,
         user: user,
       },
     });

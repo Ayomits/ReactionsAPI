@@ -1,5 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Oauth2Entity } from './oauth2.entity';
+import { TokenEntity } from './token.entity';
 
 @Entity('users')
 export class UserEntity {
@@ -14,4 +15,7 @@ export class UserEntity {
 
   @OneToMany(() => Oauth2Entity, (o) => o.user)
   oauth2: Oauth2Entity[];
+
+  @OneToMany(() => TokenEntity, (t) => t.user)
+  tokens: TokenEntity[];
 }
