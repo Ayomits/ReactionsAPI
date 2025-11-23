@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { TagMediaEntity } from './tag-media.entity';
 import { TagEntity } from './reaction.entity';
+import { UserEntity } from './user.entity';
 
 @Entity('medias')
 export class MediaEntity {
@@ -36,4 +37,8 @@ export class MediaEntity {
   @OneToOne(() => TagMediaEntity, { cascade: true })
   @JoinColumn({ name: 'tag_media_id' })
   tagMedia: TagMediaEntity;
+
+  @OneToOne(() => UserEntity, (u) => u.avatar, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'avatar_user_id' })
+  userAvatar: UserEntity;
 }

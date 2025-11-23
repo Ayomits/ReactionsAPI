@@ -1,6 +1,7 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MediaEntity } from 'src/entities/media.entity';
+import { MinioBuckets } from 'src/minio/minio.const';
 import { MinioService } from 'src/minio/minio.service';
 import { In, Not, Repository } from 'typeorm';
 
@@ -13,7 +14,8 @@ export class MediaService implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
-    await this.minioService.createBucketIfNotExists('tags');
+    await this.minioService.createBucketIfNotExists(MinioBuckets.tags);
+    await this.minioService.createBucketIfNotExists(MinioBuckets.avatars);
   }
 
   async upload(options: {

@@ -28,6 +28,10 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException('Invalid token provided');
     }
 
+    const payload = this.tokenService.decodeToken(token);
+
+    req.uid = payload.uid;
+
     return true;
   }
 }

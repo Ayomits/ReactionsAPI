@@ -7,7 +7,7 @@ import { Time } from 'src/utils/time';
 import { Repository } from 'typeorm';
 import { UserService } from '../user/user.service';
 
-type TokenPayload = {
+export type TokenPayload = {
   rid: string;
   aid: string;
   uid: string;
@@ -22,8 +22,12 @@ export class TokensService {
     @Inject(forwardRef(() => UserService)) private userService: UserService,
   ) {}
 
+  decodeToken(token: string): TokenPayload {
+    return this.jwtService.decode<TokenPayload>(token);
+  }
+
   async verifyAccess(token: string) {
-    const payload = this.jwtService.decode<TokenPayload>(token);
+    const payload = this.decodeToken(token);
 
     if (!payload) {
       return false;
