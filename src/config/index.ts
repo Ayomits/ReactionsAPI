@@ -7,6 +7,14 @@ export class AppConfig {
     return 4000;
   }
 
+  static get jwtSecretAccess() {
+    return this.loadVar(`JWT_SECRET_ACCESS`);
+  }
+
+  static get jwtSecretRefresh() {
+    return this.loadVar(`JWT_SECRET_REFRESH`);
+  }
+
   static get appEnv() {
     return this.loadVar('APP_ENV') as 'dev' | 'prod';
   }

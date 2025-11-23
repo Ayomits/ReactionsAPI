@@ -3,6 +3,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TagModule } from './app/v1/tags/tags.module';
 import { MediaModule } from './app/v1/media/media.module';
 import { MinioModule } from './minio/minio.module';
+import { UserModule } from './app/v1/user/user.module';
+import { AuthModule } from './app/v1/auth/auth.module';
 import dataSource from './data-source';
 
 @Module({
@@ -11,6 +13,8 @@ import dataSource from './data-source';
     TagModule,
     MediaModule,
     MinioModule,
+    UserModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
