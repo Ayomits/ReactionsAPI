@@ -21,7 +21,10 @@ export class MediaService implements OnModuleInit {
     folderName: string | null;
     files: Array<Express.Multer.File>;
   }) {
-    const saves = options.files.map(() => ({ is_uploaded: false }));
+    const saves = options.files.map(() => ({
+      is_uploaded: false,
+      bucketName: options.bucketName,
+    }));
     const medias = await this.mediaRepository.save(saves);
     const ids = medias.map((m) => m.id);
 
@@ -29,9 +32,9 @@ export class MediaService implements OnModuleInit {
     function generatePath(id: string) {
       return `${options.folderName ?? ''}/${id}.gif`;
     }
+
     for (let i = 0; i < medias.length; i++) {
       const id = ids[i];
-
       try {
         await this.minioService.client.putObject(
           options.bucketName,
@@ -49,28 +52,27 @@ export class MediaService implements OnModuleInit {
       }
     }
 
-    for (const id of ids) {
-      await this.mediaRepository.update(
-        { id: id },
-        {
-          is_uploaded: true,
-          bucketName: options.bucketName,
-          path: generatePath(id),
-        },
-      );
-    }
+    await this.mediaRepository.update(
+      { id: In(resolvedIds) },
+      {
+        is_uploaded: true,
+        bucketName: options.bucketName,
+        path: () => `CONCAT('${options.folderName ?? ''}/', id, '.gif')`,
+      },
+    );
 
     if (resolvedIds.length != options.files.length) {
       await this.mediaRepository.delete({ id: Not(In(resolvedIds)) });
     }
 
-    return medias.filter((m) => resolvedIds.includes(m.id));
+    return this.mediaRepository.find({
+      where: { id: In(resolvedIds) },
+    });
   }
 
   async delete(ids: string[]) {
     const entries = await this.mediaRepository.find({
       where: { id: In(ids) },
-      transaction: true,
     });
 
     for (const entry of entries) {

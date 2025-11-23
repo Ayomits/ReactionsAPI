@@ -2,11 +2,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { TagMediaEntity } from './reaction-media.entity';
+import { TagMediaEntity } from './tag-media.entity';
 import { TagEntity } from './reaction.entity';
 
 @Entity('medias')
@@ -17,10 +18,10 @@ export class MediaEntity {
   @Column()
   is_uploaded: boolean;
 
-  @Column()
+  @Column({ nullable: true })
   path: string;
 
-  @Column()
+  @Column({ nullable: true })
   bucketName: string;
 
   @CreateDateColumn()
@@ -29,6 +30,10 @@ export class MediaEntity {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @OneToOne(() => TagMediaEntity, (r) => r.id)
+  @OneToOne(() => TagMediaEntity, (r) => r.id, { onDelete: 'CASCADE' })
   tag: TagEntity;
+
+  @OneToOne(() => TagMediaEntity, { cascade: true })
+  @JoinColumn({ name: 'tag_media_id' })
+  tagMedia: TagMediaEntity;
 }

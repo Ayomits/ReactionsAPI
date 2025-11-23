@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { TagMediaEntity } from './reaction-media.entity';
+import { TagMediaEntity } from './tag-media.entity';
 
 export const TagType = {
   OtakuApi: 0,

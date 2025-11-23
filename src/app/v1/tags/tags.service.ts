@@ -1,16 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JsonApiResponse } from 'src/response/json-api';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { CreateTagDto, UpdateTagDto } from './tags.dto';
 import { HttpMethod } from 'src/utils/method';
 import { MediaService } from '../media/media.service';
 import { BadRequestException } from 'src/exceptions/bad-request';
 import { NotFoundException } from 'src/exceptions/not-found';
 import { TagEntity } from 'src/entities/reaction.entity';
-import { TagMediaEntity } from 'src/entities/reaction-media.entity';
+import { TagMediaEntity } from 'src/entities/tag-media.entity';
 import { MinioService } from 'src/minio/minio.service';
 import { MinioBuckets } from 'src/minio/minio.const';
+import { MediaEntity } from 'src/entities/media.entity';
 
 @Injectable()
 export class TagService {
@@ -20,6 +21,8 @@ export class TagService {
     @InjectRepository(TagMediaEntity)
     private tagMediaRepository: Repository<TagMediaEntity>,
     private mediaService: MediaService,
+    @InjectRepository(MediaEntity)
+    private mediaRepository: Repository<MediaEntity>,
     private minioService: MinioService,
   ) {}
 
@@ -32,7 +35,7 @@ export class TagService {
 
     const gifs = files.filter((f) => f.mimetype === 'image/gif');
 
-    if (gifs.length === 0) {
+    if (gifs.length === 0 || files.length === 0) {
       throw new BadRequestException('None gifs provided');
     }
 
@@ -53,10 +56,14 @@ export class TagService {
       })),
     );
 
+    for (const media of uploaded) {
+      const splited = media.url.split('/');
+      const id = splited[splited.length - 1].slice(0, -4);
+      await this.mediaRepository.update({ id }, { tagMedia: media });
+    }
+
     return new JsonApiResponse({
-      data: {
-        medias: uploaded,
-      },
+      data: uploaded,
       relationships: {
         tag: {
           links: [`/api/v1/tags/${name}`],
@@ -187,6 +194,17 @@ export class TagService {
       throw new NotFoundException('tag does not exists');
     }
 
-    return new JsonApiResponse({ data: existed });
+    const mediaIds = existed.media.map((m) => ({
+      tagMediaId: m.id,
+      s3Id: m.media.id,
+    }));
+
+    await Promise.all([
+      this.mediaService.delete(mediaIds.map((m) => m.s3Id)),
+      this.tagMediaRepository.delete({
+        id: In(mediaIds.map((m) => m.tagMediaId)),
+      }),
+      this.tagRepository.delete({ name }),
+    ]);
   }
 }
