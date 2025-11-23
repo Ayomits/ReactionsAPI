@@ -8,15 +8,22 @@ import {
   Post,
   Put,
   UploadedFiles,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 
-import { ApiBody, ApiConsumes, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiResponse,
+} from '@nestjs/swagger';
 
 import { CreateTagDto, UpdateTagDto, UploadMediaDto } from './tags.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { TagService } from './tags.service';
 import { AllTagTagsResponse, SingleTagResponse } from './tags.response';
+import { AuthGuard } from 'src/guards/auth.guard';
 
 @Controller({
   path: '/tags',
@@ -32,6 +39,8 @@ export class TagController {
   )
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: UploadMediaDto })
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   uploadTagMedia(
     @Param('name') name: string,
     @UploadedFiles() files: Express.Multer.File[],
@@ -41,14 +50,10 @@ export class TagController {
 
   @Post('/')
   @ApiResponse({})
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   handleCreation(@Body() dto: CreateTagDto) {
     return this.tagService.createTag(dto);
-  }
-
-  @Put('/:name')
-  @ApiResponse({})
-  handleUpdate(@Param('name') name: string, @Body() dto: UpdateTagDto) {
-    return this.tagService.updateTag(name, dto);
   }
 
   @Get('/')
@@ -63,8 +68,18 @@ export class TagController {
     return this.tagService.findByName(name);
   }
 
+  @Put('/:name')
+  @ApiResponse({})
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  handleUpdate(@Param('name') name: string, @Body() dto: UpdateTagDto) {
+    return this.tagService.updateTag(name, dto);
+  }
+
   @Delete('/:name')
   @ApiResponse({ status: HttpStatus.NO_CONTENT })
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   async handleTagDeletion(@Param('name') name: string) {
     return this.tagService.deleteTag(name);
   }

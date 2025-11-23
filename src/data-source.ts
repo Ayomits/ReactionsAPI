@@ -10,6 +10,7 @@ import { UserEntity } from './entities/user.entity';
 import { Oauth2User1763891144333 } from './migrations/1763891144333-oauth2-user';
 import { TokenEntity } from './entities/token.entity';
 import { TokenEntity1763893472672 } from './migrations/1763893472672-token-entity';
+import { TokenDateCols1763895572043 } from './migrations/1763895572043-token-date-cols';
 
 process.loadEnvFile();
 
@@ -29,6 +30,7 @@ const dataSource = new DataSource({
     MediaEntityFk1763889740731,
     Oauth2User1763891144333,
     TokenEntity1763893472672,
+    TokenDateCols1763895572043,
   ],
 });
 

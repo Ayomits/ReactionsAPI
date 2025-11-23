@@ -13,6 +13,7 @@ async function bootstrap() {
     .setTitle('Reactions Api')
     .setDescription('The reactions api')
     .setVersion('1.0')
+    .addBearerAuth({ in: 'header', name: 'Authorization', type: 'apiKey' })
     .build();
 
   const documentFactory = () => SwaggerModule.createDocument(app, config);

@@ -1,9 +1,11 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { UserEntity } from './user.entity';
 
@@ -23,4 +25,10 @@ export class TokenEntity {
   @ManyToOne(() => UserEntity, { cascade: true })
   @JoinColumn({ name: 'user_id' })
   user: UserEntity;
+
+  @CreateDateColumn()
+  created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
 }
