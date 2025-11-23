@@ -24,6 +24,8 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { TagService } from './tags.service';
 import { AllTagTagsResponse, SingleTagResponse } from './tags.response';
 import { AuthGuard } from 'src/guards/auth.guard';
+import { RequireRole, RolesGuard } from 'src/guards/role.guard';
+import { RoleNames } from '../roles/roles.const';
 
 @Controller({
   path: '/tags',
@@ -39,8 +41,9 @@ export class TagController {
   )
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: UploadMediaDto })
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
   @ApiBearerAuth()
+  @RequireRole(RoleNames.Super)
   uploadTagMedia(
     @Param('name') name: string,
     @UploadedFiles() files: Express.Multer.File[],
@@ -50,8 +53,9 @@ export class TagController {
 
   @Post('/')
   @ApiResponse({})
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
   @ApiBearerAuth()
+  @RequireRole(RoleNames.Super)
   handleCreation(@Body() dto: CreateTagDto) {
     return this.tagService.createTag(dto);
   }
@@ -70,16 +74,18 @@ export class TagController {
 
   @Put('/:name')
   @ApiResponse({})
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
   @ApiBearerAuth()
+  @RequireRole(RoleNames.Super)
   handleUpdate(@Param('name') name: string, @Body() dto: UpdateTagDto) {
     return this.tagService.updateTag(name, dto);
   }
 
   @Delete('/:name')
   @ApiResponse({ status: HttpStatus.NO_CONTENT })
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
   @ApiBearerAuth()
+  @RequireRole(RoleNames.Super)
   async handleTagDeletion(@Param('name') name: string) {
     return this.tagService.deleteTag(name);
   }

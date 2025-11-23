@@ -2,6 +2,8 @@ import {
   Column,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -9,6 +11,7 @@ import {
 import { Oauth2Entity } from './oauth2.entity';
 import { TokenEntity } from './token.entity';
 import { MediaEntity } from './media.entity';
+import { RoleEntity } from './role.entity';
 
 @Entity('users')
 export class UserEntity {
@@ -30,4 +33,8 @@ export class UserEntity {
   @OneToOne(() => MediaEntity, (m) => m.userAvatar, { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'avatar_id' })
   avatar: MediaEntity;
+
+  @ManyToMany(() => RoleEntity, (r) => r.users)
+  @JoinTable()
+  roles: RoleEntity[];
 }

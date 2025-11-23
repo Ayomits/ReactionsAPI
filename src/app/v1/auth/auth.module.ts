@@ -11,7 +11,7 @@ AppConfig.init();
 @Module({
   imports: [forwardRef(() => UserModule), forwardRef(() => TokensModule)],
   providers: [AuthService, AuthGuard],
-  exports: [AuthService, AuthGuard, TokensModule],
+  exports: [AuthService, AuthGuard, TokensModule, UserModule],
   controllers: [AuthController],
 })
 export class AuthModule {}

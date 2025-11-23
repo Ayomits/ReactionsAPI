@@ -6,6 +6,7 @@ import { MinioModule } from './minio/minio.module';
 import { UserModule } from './app/v1/user/user.module';
 import { AuthModule } from './app/v1/auth/auth.module';
 import { TokensModule } from './app/v1/tokens/tokens.module';
+import { RolesModule } from './app/v1/roles/roles.module';
 import dataSource from './data-source';
 
 @Module({
@@ -17,6 +18,7 @@ import dataSource from './data-source';
     UserModule,
     AuthModule,
     TokensModule,
+    RolesModule,
   ],
   controllers: [],
   providers: [],

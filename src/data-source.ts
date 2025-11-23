@@ -12,6 +12,9 @@ import { TokenEntity } from './entities/token.entity';
 import { TokenEntity1763893472672 } from './migrations/1763893472672-token-entity';
 import { TokenDateCols1763895572043 } from './migrations/1763895572043-token-date-cols';
 import { UserAvatar1763897122036 } from './migrations/1763897122036-user-avatar';
+import { RoleEntity } from './entities/role.entity';
+import { CreateRoleEntity1763907510830 } from './migrations/1763907510830-create-role-entity';
+import { RemovePermissionsField1763913670176 } from './migrations/1763913670176-remove-permissions-field';
 
 process.loadEnvFile();
 
@@ -25,6 +28,7 @@ const dataSource = new DataSource({
     Oauth2Entity,
     UserEntity,
     TokenEntity,
+    RoleEntity,
   ],
   migrations: [
     FirstMigration1763889493845,
@@ -33,6 +37,8 @@ const dataSource = new DataSource({
     TokenEntity1763893472672,
     TokenDateCols1763895572043,
     UserAvatar1763897122036,
+    CreateRoleEntity1763907510830,
+    RemovePermissionsField1763913670176,
   ],
 });
 

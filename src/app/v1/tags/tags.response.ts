@@ -21,10 +21,13 @@ export class AllTagTagsResponse {
 class SingleTagMedia {
   @ApiProperty()
   id: string;
+
   @ApiProperty()
   url: string;
+
   @ApiProperty()
   format: string;
+
   @ApiProperty()
   source: number;
 }
@@ -32,8 +35,10 @@ class SingleTagMedia {
 class SingleTag {
   @ApiProperty()
   id: string;
+
   @ApiProperty()
   name: string;
+
   @ApiProperty({ type: [SingleTagMedia] })
   media: SingleTagMedia[];
 }
