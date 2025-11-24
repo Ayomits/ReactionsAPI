@@ -16,8 +16,6 @@ import { RoleEntity } from './entities/role.entity';
 import { CreateRoleEntity1763907510830 } from './migrations/1763907510830-create-role-entity';
 import { RemovePermissionsField1763913670176 } from './migrations/1763913670176-remove-permissions-field';
 
-process.loadEnvFile();
-
 const dataSource = new DataSource({
   url: AppConfig.dbUrl,
   type: 'postgres',

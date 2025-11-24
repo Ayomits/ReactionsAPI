@@ -6,7 +6,6 @@ import { VersioningType } from '@nestjs/common';
 import { AppConfig } from './config';
 
 async function bootstrap() {
-  AppConfig.init();
   const app = await NestFactory.create(AppModule);
 
   const config = new DocumentBuilder()

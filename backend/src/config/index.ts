@@ -1,8 +1,8 @@
-export class AppConfig {
-  static init() {
-    process.loadEnvFile();
-  }
+import { config } from 'dotenv';
 
+config();
+
+export class AppConfig {
   static get port() {
     return 4000;
   }
