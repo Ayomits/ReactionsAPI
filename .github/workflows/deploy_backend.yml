@@ -30,8 +30,8 @@ jobs:
           file: ./docker/images/backend/Dockerfile
           push: true
           tags: |
-            registry.gitlab.com/ayomits/fear-helper:reation_backend_latest
-            registry.gitlab.com/ayomits/fear-helper:reation_backend
+            registry.gitlab.com/ayomits/fear-helper:reaction_backend_latest
+            registry.gitlab.com/ayomits/fear-helper:reaction_backend
           build-args:
             APP_ENV=prod
           no-cache: true

@@ -26,7 +26,6 @@ export default function Home() {
           placeholder="Поиск по тегам"
         />
 
-        {/* Карточка */}
         <div className="w-full grid grid-cols-[repeat(auto-fit,20rem)] justify-center gap-x-4 gap-y-8">
           {tags.data?.data?.map?.((t, i) => {
             const medias = t.media.map((m) => m.url);
