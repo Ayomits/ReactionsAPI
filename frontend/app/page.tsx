@@ -9,7 +9,7 @@ import {
 
 export default function Home() {
   return (
-    <div className="max-w-360 flex justify-center flex-col gap-4 items-center mx-auto">
+    <div className="max-w-342.5 flex justify-center flex-col gap-4 items-center mx-auto">
       <h3 className="text-2xl">Более 80 тегов</h3>
       <div className="size-full flex flex-col gap-8">
         <input
@@ -19,7 +19,7 @@ export default function Home() {
         />
 
         {/* Карточка */}
-        <div className="w-full grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-x-4 gap-y-8">
+        <div className="w-full grid grid-cols-[repeat(auto-fit,20rem)] justify-center gap-x-4 gap-y-8">
           {new Array(40).fill(null).map((_, i) => (
             <TagCard key={i}>
               <TagImage url="https://i.pinimg.com/originals/29/92/fb/2992fb9c44cdc817e6cbc0782fbc6276.gif" />
