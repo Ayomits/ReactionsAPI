@@ -141,12 +141,13 @@ export class TagService {
   }
 
   async findAllTags() {
-    const tags = await this.tagRepository.find();
+    const tags = await this.tagRepository.find({ relations: { media: true } });
 
     return new JsonApiResponse({
       data: tags.map((t) => ({
         name: t.name,
         url: `/api/v1/tags/${t.name}`,
+        media: t.media,
       })),
     });
   }

@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ededed;
+  --foreground: #0d0d0d;
+  --components-main: #ffffff;
+  --components-secondary: #fbfbfb;
+  --primary: #040404;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-components-main: var(--components-main);
+  --color-components-secondary: var(--components-secondary);
+  --font-roboto: var(--font-roboto);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-roboto);
+}
