@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import "./globals.css";
 import { Header } from "./components/header";
+import { ReactQueryProvider } from "./providers/react-query";
 
 const roboto = Roboto({
   variable: "--font-roboto",
@@ -20,8 +21,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${roboto.variable} antialiased`}>
-        <Header />
-        <div className="pt-4 pb-8">{children}</div>
+        <ReactQueryProvider>
+          <Header />
+          <div className="pt-4 pb-8">{children}</div>
+        </ReactQueryProvider>
       </body>
     </html>
   );

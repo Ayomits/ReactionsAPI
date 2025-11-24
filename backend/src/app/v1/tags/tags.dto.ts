@@ -7,7 +7,12 @@ export class CreateTagDto {
 
 export class UpdateTagDto extends PartialType(CreateTagDto) {}
 
-export class UploadMediaDto {
+export class UploadMediaImagesDto {
   @ApiProperty({ type: [String], format: 'binary' })
   media: Express.Multer.File[];
+}
+
+export class UploadMediaLinksDto {
+  @ApiProperty({ type: [String] })
+  links: string[];
 }

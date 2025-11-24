@@ -19,7 +19,12 @@ import {
   ApiResponse,
 } from '@nestjs/swagger';
 
-import { CreateTagDto, UpdateTagDto, UploadMediaDto } from './tags.dto';
+import {
+  CreateTagDto,
+  UpdateTagDto,
+  UploadMediaImagesDto,
+  UploadMediaLinksDto,
+} from './tags.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { TagService } from './tags.service';
 import { AllTagTagsResponse, SingleTagResponse } from './tags.response';
@@ -33,22 +38,34 @@ import { RoleNames } from '../roles/roles.const';
 export class TagController {
   constructor(private tagService: TagService) {}
 
-  @Post('/:name/upload')
+  @Post('/:name/upload/images')
   @UseInterceptors(
     FilesInterceptor('media', 10, {
       limits: { fileSize: 1024 * 1024 * 4 },
     }),
   )
   @ApiConsumes('multipart/form-data')
-  @ApiBody({ type: UploadMediaDto })
+  @ApiBody({ type: UploadMediaImagesDto })
   @UseGuards(AuthGuard, RolesGuard)
   @ApiBearerAuth()
   @RequireRole(RoleNames.Super)
-  uploadTagMedia(
+  uploadTagMediaImages(
     @Param('name') name: string,
     @UploadedFiles() files: Express.Multer.File[],
   ) {
-    return this.tagService.uploadMedia(name, files);
+    return this.tagService.uploadMediaImages(name, files);
+  }
+
+  @Post('/:name/upload/links')
+  @ApiBody({ type: UploadMediaLinksDto })
+  @UseGuards(AuthGuard, RolesGuard)
+  @ApiBearerAuth()
+  @RequireRole(RoleNames.Super)
+  uploadTagMediaLinks(
+    @Param('name') name: string,
+    @Body() dto: UploadMediaLinksDto,
+  ) {
+    return this.tagService.uploadMediaLinks(name, dto);
   }
 
   @Post('/')

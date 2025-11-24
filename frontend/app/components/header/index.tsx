@@ -1,8 +1,10 @@
 "use client";
 
+import { ApiDocLink, DiscordServerLink, TgcLink } from "@/app/config/links";
 import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
+import { Link } from "../link";
+import { Button } from "../button";
 
 export function Header() {
   return (
@@ -10,9 +12,24 @@ export function Header() {
       <div className="max-w-7xl w-full mx-auto flex items-center justify-between ">
         <h1 className="text-[2rem]">RA</h1>
         <nav className="flex items-center gap-6">
-          <Link href="/">API</Link>
-          <Link href="/">TELEGRAM</Link>
-          <Link href="/">DISCORD</Link>
+          <Link
+            className="hover:opacity-95 transition-all duration-300"
+            href={ApiDocLink}
+          >
+            API
+          </Link>
+          <Link
+            className="hover:opacity-95 transition-all duration-300"
+            href={TgcLink}
+          >
+            TELEGRAM
+          </Link>
+          <Link
+            className="hover:opacity-95 transition-all duration-300"
+            href={DiscordServerLink}
+          >
+            DISCORD
+          </Link>
         </nav>
         <HeaderProfile />
       </div>
@@ -21,7 +38,7 @@ export function Header() {
 }
 
 export function HeaderProfile() {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   if (isLoggedIn) {
     return (
@@ -35,5 +52,5 @@ export function HeaderProfile() {
     );
   }
 
-  return <button>Войти</button>;
+  return <Button>Войти</Button>;
 }

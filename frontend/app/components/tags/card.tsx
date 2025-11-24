@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { ButtonHTMLAttributes, HTMLAttributes } from "react";
 import { Button, ButtonProps } from "../button";
+import { PlaceholderImage } from "@/app/config/imgs";
 
 type TagCardProps = {
   name: string;
@@ -23,9 +24,9 @@ export function TagImage({ url }: { url: string }) {
     <Image
       width={276}
       height={128}
-      src={url}
+      src={url ?? PlaceholderImage}
       alt="Первая гифка"
-      className="rounded-sm"
+      className="rounded-sm w-69 h-32 object-cover"
       unoptimized
     />
   );
@@ -40,7 +41,5 @@ export function TagStats({ ...props }: HTMLAttributes<HTMLDivElement>) {
 }
 
 export function TagAction({ ...props }: ButtonProps) {
-  return (
-    <Button className="bg-primary rounded-xl" {...props} />
-  );
+  return <Button className="bg-primary rounded-xl" {...props} />;
 }

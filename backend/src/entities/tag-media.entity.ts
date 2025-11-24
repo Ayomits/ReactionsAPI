@@ -23,7 +23,10 @@ export class TagMediaEntity {
   @JoinColumn({ name: 'tag_id' })
   tag!: TagEntity;
 
-  @OneToOne(() => MediaEntity, (e) => e.id, { onDelete: 'CASCADE' })
+  @OneToOne(() => MediaEntity, (e) => e.id, {
+    onDelete: 'CASCADE',
+    nullable: true,
+  })
   @JoinColumn({ name: 'media_id' })
   media: MediaEntity;
 }

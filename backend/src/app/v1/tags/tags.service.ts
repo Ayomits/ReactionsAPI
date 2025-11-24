@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JsonApiResponse } from 'src/response/json-api';
 import { In, Repository } from 'typeorm';
-import { CreateTagDto, UpdateTagDto } from './tags.dto';
+import { CreateTagDto, UpdateTagDto, UploadMediaLinksDto } from './tags.dto';
 import { HttpMethod } from 'src/utils/method';
 import { MediaService } from '../media/media.service';
 import { BadRequestException } from 'src/exceptions/bad-request';
@@ -26,7 +26,7 @@ export class TagService {
     private minioService: MinioService,
   ) {}
 
-  async uploadMedia(name: string, files: Express.Multer.File[]) {
+  async uploadMediaImages(name: string, files: Express.Multer.File[]) {
     const existed = await this.tagRepository.findOneBy({ name: name });
 
     if (!existed) {
@@ -61,6 +61,32 @@ export class TagService {
       const id = splited[splited.length - 1].slice(0, -4);
       await this.mediaRepository.update({ id }, { tagMedia: media });
     }
+
+    return new JsonApiResponse({
+      data: uploaded,
+      relationships: {
+        tag: {
+          links: [`/api/v1/tags/${name}`],
+          data: existed,
+        },
+      },
+    }).toJSON();
+  }
+
+  async uploadMediaLinks(name: string, dto: UploadMediaLinksDto) {
+    const existed = await this.tagRepository.findOneBy({ name: name });
+
+    if (!existed) {
+      throw new NotFoundException('Tag does not exists');
+    }
+
+    const uploaded = await this.tagMediaRepository.save(
+      dto.links.map((l) => ({
+        tag: existed,
+        url: l,
+        media: undefined,
+      })),
+    );
 
     return new JsonApiResponse({
       data: uploaded,
@@ -111,7 +137,7 @@ export class TagService {
       this.tagRepository.exists({ where: { name: dto.name } }),
     ]);
 
-    if (existed) {
+    if (!existed) {
       return new NotFoundException();
     }
 
