@@ -5,6 +5,7 @@
   --foreground: #0d0d0d;
   --components-main: #ffffff;
   --components-secondary: #fbfbfb;
+  --components-text: #ffffff;
   --primary: #040404;
 }
 
@@ -14,6 +15,7 @@
   --color-primary: var(--primary);
   --color-components-main: var(--components-main);
   --color-components-secondary: var(--components-secondary);
+  --color-components-text: var(--components-text);
   --font-roboto: var(--font-roboto);
 }
 

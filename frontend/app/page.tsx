@@ -1,4 +1,11 @@
 import Image from "next/image";
+import {
+  TagAction,
+  TagCard,
+  TagImage,
+  TagName,
+  TagStats,
+} from "./components/tags/card";
 
 export default function Home() {
   return (
@@ -14,36 +21,19 @@ export default function Home() {
         {/* Карточка */}
         <div className="w-full grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-x-4 gap-y-8">
           {new Array(40).fill(null).map((_, i) => (
-            <TagCard key={i} />
+            <TagCard key={i}>
+              <TagImage url="https://i.pinimg.com/originals/29/92/fb/2992fb9c44cdc817e6cbc0782fbc6276.gif" />
+              <TagName>Smoke</TagName>
+              <TagStats>
+                <span>Создан: 12.11.2024</span>
+                <span>Создан: 12.11.2024</span>
+                <span>Создан: 12.11.2024</span>
+              </TagStats>
+              <TagAction>Edit</TagAction>
+            </TagCard>
           ))}
         </div>
       </div>
-    </div>
-  );
-}
-
-function TagCard() {
-  return (
-    <div className="w-80 h-90 bg-components-main rounded-xl p-4 flex flex-col gap-4 shadow-md">
-      <div>
-        <Image
-          width={276}
-          height={128}
-          src="https://i.pinimg.com/originals/29/92/fb/2992fb9c44cdc817e6cbc0782fbc6276.gif"
-          alt="Первая гифка"
-          className="rounded-sm"
-          unoptimized
-        />
-      </div>
-      <h3 className="text-center">Smoke</h3>
-      <div className="flex flex-col">
-        <span>Гифок: 23</span>
-        <span>Создан: 21.12.24</span>
-        <span>Обновлён: 21.12.25</span>
-      </div>
-      <button className="h-12.5 w-full bg-primary rounded-xl cursor-pointer">
-        Случайная гифка
-      </button>
     </div>
   );
 }
