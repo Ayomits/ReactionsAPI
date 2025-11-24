@@ -1,0 +1,4 @@
+#!/bin/sh
+cd /app
+
+pnpm install && pnpm run migration:run && pnpm run start:prod
