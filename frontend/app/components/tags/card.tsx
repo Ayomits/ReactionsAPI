@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { ButtonHTMLAttributes, HTMLAttributes } from "react";
+import { Button, ButtonProps } from "../button";
 
 type TagCardProps = {
   name: string;
@@ -38,13 +39,8 @@ export function TagStats({ ...props }: HTMLAttributes<HTMLDivElement>) {
   return <div className="flex flex-col" {...props} />;
 }
 
-export function TagAction({
-  ...props
-}: ButtonHTMLAttributes<HTMLButtonElement>) {
+export function TagAction({ ...props }: ButtonProps) {
   return (
-    <button
-      className="h-12.5 bg-primary rounded-xl text-white"
-      {...props}
-    />
+    <Button className="bg-primary rounded-xl" {...props} />
   );
 }
