@@ -1,14 +1,7 @@
 import Image from "next/image";
-import { ButtonHTMLAttributes, HTMLAttributes } from "react";
+import { HTMLAttributes } from "react";
 import { Button, ButtonProps } from "../button";
 import { PlaceholderImage } from "@/app/config/imgs";
-
-type TagCardProps = {
-  name: string;
-  created_at: Date | string;
-  updated_at: Date | string;
-  image: string;
-};
 
 export function TagCard({ ...props }: HTMLAttributes<HTMLDivElement>) {
   return (

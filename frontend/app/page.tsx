@@ -10,6 +10,7 @@ import {
   TagStats,
 } from "./components/tags";
 import { getRandomArrVal } from "./lib/random";
+import { timeFormat } from "./lib/format";
 
 export default function Home() {
   const tags = useGetAllPublicTags();
@@ -34,11 +35,10 @@ export default function Home() {
                 <TagImage url={getRandomArrVal(medias)} />
                 <TagName>{t.name}</TagName>
                 <TagStats>
-                  <span>Создан: 12.11.2024</span>
-                  <span>Создан: 12.11.2024</span>
-                  <span>Создан: 12.11.2024</span>
+                  <span>Создан: {timeFormat(new Date(t.created_at))}</span>
+                  <span>Обновлён: {timeFormat(new Date(t.updated_at))}</span>
                 </TagStats>
-                <TagRandomImageAction medias={medias} />
+                <TagRandomImageAction name={t.name} medias={medias} />
               </TagCard>
             );
           })}

@@ -10,6 +10,8 @@ type TagResponse = {
     id: string;
     url: string;
   }[];
+  created_at: Date
+  updated_at: Date
 };
 
 export function useGetAllPublicTags() {
