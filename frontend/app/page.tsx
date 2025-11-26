@@ -44,6 +44,7 @@ export default function Home() {
                 <TagStats>
                   <span>Создан: {timeFormat(new Date(t.created_at))}</span>
                   <span>Обновлён: {timeFormat(new Date(t.updated_at))}</span>
+                  <span>Медиа: {t.media.length + 1}</span>
                 </TagStats>
                 <TagRandomImageAction name={t.name} medias={medias} />
               </TagCard>

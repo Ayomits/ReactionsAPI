@@ -6,7 +6,7 @@ import { PlaceholderImage } from "@/app/config/imgs";
 export function TagCard({ ...props }: HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className="w-80 h-96 bg-components-main rounded-xl p-4 flex flex-col gap-4 shadow-md"
+      className="w-80 h-90 bg-components-main rounded-xl p-4 flex flex-col gap-4 shadow-md"
       {...props}
     />
   );
