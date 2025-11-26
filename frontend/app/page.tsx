@@ -11,9 +11,15 @@ import {
 } from "./components/tags";
 import { getRandomArrVal } from "./lib/random";
 import { timeFormat } from "./lib/format";
+import { TextInput } from "./components/text-input";
+import { ChangeEvent, useState } from "react";
 
 export default function Home() {
   const tags = useGetAllPublicTags();
+
+  const [input, setInput] = useState("");
+
+  const filtred = tags.data?.data?.filter((t) => t.name.includes(input)) ?? [];
 
   return (
     <div className="max-w-342.5 flex justify-center flex-col gap-4 items-center mx-auto px-5">
@@ -21,14 +27,15 @@ export default function Home() {
         {tags.data?.data?.length ?? 0} тегов доступно!
       </h3>
       <div className="size-full flex flex-col gap-8">
-        <input
-          type="text"
-          className="w-full h-16 bg-components-main shadow-md rounded-xl px-5 active:border-none hover:border-none foucs:border-none outline-none"
-          placeholder="Поиск по тегам"
+        <TextInput
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setInput(e.target.value)
+          }
+          className="w-full h-16"
         />
 
         <div className="w-full grid grid-cols-[repeat(auto-fit,20rem)] justify-center gap-x-4 gap-y-8">
-          {tags.data?.data?.map?.((t, i) => {
+          {filtred?.map?.((t, i) => {
             const medias = t.media.map((m) => m.url);
             return (
               <TagCard key={i}>
