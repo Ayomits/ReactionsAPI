@@ -1,18 +1,20 @@
 "use client";
 
 import { DialogTitle } from "@radix-ui/react-dialog";
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-} from "../dialog";
+import { Dialog, DialogContent, DialogTrigger } from "../dialog";
 import { Button } from "../button";
 import Image from "next/image";
 import { ApiMethod } from "../api";
 import { getRandomArrVal } from "@/app/lib/random";
 import { PlaceholderImage } from "@/app/config/imgs";
 
-export function TagRandomImageAction({ medias }: { medias: string[] }) {
+export function TagRandomImageAction({
+  name,
+  medias,
+}: {
+  name: string;
+  medias: string[];
+}) {
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -22,7 +24,7 @@ export function TagRandomImageAction({ medias }: { medias: string[] }) {
         <DialogTitle className="text-xl">Медиа номер 1</DialogTitle>
         <ul>
           <li>
-            <ApiMethod variant="get" /> /api/v1/tags/smoke
+            <ApiMethod variant="get" /> /api/v1/tags/{name}
           </li>
         </ul>
         <Image

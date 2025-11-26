@@ -15,7 +15,7 @@ export default function Home() {
   const tags = useGetAllPublicTags();
 
   return (
-    <div className="max-w-342.5 flex justify-center flex-col gap-4 items-center mx-auto">
+    <div className="max-w-342.5 flex justify-center flex-col gap-4 items-center mx-auto px-5">
       <h3 className="text-2xl">
         {tags.data?.data?.length ?? 0} тегов доступно!
       </h3>

@@ -174,6 +174,8 @@ export class TagService {
         name: t.name,
         url: `/api/v1/tags/${t.name}`,
         media: t.media,
+        created_at: t.created_at,
+        updated_at: t.updated_at,
       })),
     });
   }

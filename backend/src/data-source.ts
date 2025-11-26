@@ -15,6 +15,7 @@ import { UserAvatar1763897122036 } from './migrations/1763897122036-user-avatar'
 import { RoleEntity } from './entities/role.entity';
 import { CreateRoleEntity1763907510830 } from './migrations/1763907510830-create-role-entity';
 import { RemovePermissionsField1763913670176 } from './migrations/1763913670176-remove-permissions-field';
+import { DateCols1764170986016 } from './migrations/1764170986016-date-cols';
 
 const dataSource = new DataSource({
   url: AppConfig.dbUrl,
@@ -37,6 +38,7 @@ const dataSource = new DataSource({
     UserAvatar1763897122036,
     CreateRoleEntity1763907510830,
     RemovePermissionsField1763913670176,
+    DateCols1764170986016,
   ],
 });
 

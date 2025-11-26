@@ -2,14 +2,14 @@
 
 import { ApiDocLink, DiscordServerLink, TgcLink } from "@/app/config/links";
 import Image from "next/image";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { Link } from "../link";
 import { Button } from "../button";
 
 export function Header() {
   return (
     <header className="bg-components-main shadow-md h-25 w-full flex sticky top-0">
-      <div className="max-w-7xl w-full mx-auto flex items-center justify-between ">
+      <div className="max-w-7xl w-full mx-auto flex items-center justify-between px-6 xl:px-0">
         <h1 className="text-[2rem]">RA</h1>
         <nav className="flex items-center gap-6">
           <Link
@@ -52,5 +52,5 @@ export function HeaderProfile() {
     );
   }
 
-  return <Button>Войти</Button>;
+  return <Fragment />;
 }

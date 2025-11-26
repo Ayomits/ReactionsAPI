@@ -1,4 +1,11 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { TagMediaEntity } from './tag-media.entity';
 
 export const TagType = {
@@ -16,4 +23,10 @@ export class TagEntity {
 
   @OneToMany(() => TagMediaEntity, (m) => m.tag)
   media!: TagMediaEntity[];
+
+  @CreateDateColumn()
+  created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
 }
